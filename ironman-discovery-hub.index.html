@@ -1,0 +1,2285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRONMAN Mobile App - Discovery Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-header { background: linear-gradient(135deg, #E31937 0%, #C8102E 50%, #8B0000 100%); }
+        .sidebar { position: fixed; left: 0; top: 0; height: 100vh; width: 280px; overflow-y: auto; }
+        .main-content { margin-left: 280px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+        .priority-mvp { background: #D1FAE5; color: #059669; }
+        .priority-p1 { background: #FEF3C7; color: #D97706; }
+        .priority-p2 { background: #DBEAFE; color: #2563EB; }
+        .persona-content.hidden { display: none; }
+        .persona-content { display: block; }
+        .nav-category { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #9CA3AF; margin-top: 24px; margin-bottom: 8px; padding-left: 16px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; color: #D1D5DB; cursor: pointer; transition: all 0.2s; border-left: 3px solid transparent; }
+        .nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
+        .nav-item.active { background: rgba(227,25,55,0.2); color: #E31937; border-left-color: #E31937; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #1F2937; }
+        ::-webkit-scrollbar-thumb { background: #4B5563; border-radius: 3px; }
+        @media (max-width: 1024px) {
+            .sidebar { width: 100%; height: auto; position: relative; }
+            .main-content { margin-left: 0; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar bg-gray-900 text-white">
+        <div class="p-6 border-b border-gray-800">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center font-bold text-xl">IM</div>
+                <div>
+                    <h1 class="font-bold text-lg">IRONMAN</h1>
+                    <p class="text-xs text-gray-400">Mobile App Discovery</p>
+                </div>
+            </div>
+        </div>
+
+        <nav class="py-4">
+            <div class="nav-category">Project</div>
+            <div class="nav-item active" onclick="showTab('overview', this)">
+                <span>📊</span><span>Overview</span>
+            </div>
+            <div class="nav-item" onclick="showTab('vision', this)">
+                <span>🎯</span><span>Vision & Goals</span>
+            </div>
+
+            <div class="nav-category">Product</div>
+            <div class="nav-item" onclick="showTab('personas', this)">
+                <span>👥</span><span>Personas</span>
+            </div>
+            <div class="nav-item" onclick="showTab('specs', this)">
+                <span>📋</span><span>Feature Specs</span>
+            </div>
+            <div class="nav-item" onclick="showTab('screens', this)">
+                <span>📱</span><span>Screen Inventory</span>
+            </div>
+            <div class="nav-item" onclick="showTab('metrics', this)">
+                <span>📈</span><span>Success Metrics</span>
+            </div>
+
+            <div class="nav-category">Technical</div>
+            <div class="nav-item" onclick="showTab('architecture', this)">
+                <span>🏗️</span><span>Architecture</span>
+            </div>
+            <div class="nav-item" onclick="showTab('integrations', this)">
+                <span>🔌</span><span>Integrations</span>
+            </div>
+
+            <div class="nav-category">Design</div>
+            <div class="nav-item" onclick="showTab('brand', this)">
+                <span>🎨</span><span>Brand Guidelines</span>
+            </div>
+
+            <div class="nav-category">Project Mgmt</div>
+            <div class="nav-item" onclick="showTab('timeline', this)">
+                <span>📅</span><span>Timeline</span>
+            </div>
+            <div class="nav-item" onclick="showTab('team', this)">
+                <span>👤</span><span>Team</span>
+            </div>
+            <div class="nav-item" onclick="showTab('glossary', this)">
+                <span>📖</span><span>Glossary</span>
+            </div>
+            <div class="nav-item" onclick="showTab('sources', this)">
+                <span>🔗</span><span>Sources</span>
+            </div>
+        </nav>
+
+        <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-800 bg-gray-900">
+            <div class="text-xs text-gray-500">Last updated: Feb 2026</div>
+            <div class="text-xs text-gray-400">STRV × IRONMAN</div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content p-8">
+        <!-- Overview Tab -->
+        <div id="overview" class="tab-content active">
+            <div class="gradient-header text-white p-8 rounded-2xl mb-8">
+                <div class="flex items-center gap-2 text-red-200 text-sm mb-2">
+                    <span>📍</span><span>Discovery Phase • Q1 2026</span>
+                </div>
+                <h2 class="text-4xl font-bold mb-3">IRONMAN Mobile App</h2>
+                <p class="text-xl text-red-100">Official mobile companion for athletes worldwide</p>
+            </div>
+
+            <!-- Executive Summary -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-gray-900 mb-4">Executive Summary</h3>
+                <p class="text-gray-600 leading-relaxed mb-4">
+                    We are launching the official IRONMAN Mobile App. This app will serve as a <strong>personalized companion for athletes</strong>, offering seamless registration, centralized results, live race tracking, and post-race insights, while also supporting spectators and operational stakeholders.
+                </p>
+                <p class="text-gray-600 leading-relaxed mb-4">
+                    The mobile app will consolidate critical athlete services previously scattered across multiple platforms. The goal is to <strong>reduce friction across the athlete's journey</strong>, from registration through race day and beyond, while introducing new opportunities for loyalty, cross-sell, and engagement.
+                </p>
+                <p class="text-gray-600 leading-relaxed">
+                    This app will integrate with existing systems, external timing and registration partners, and customer support & commerce tools to deliver a scalable foundation for innovation, personalization, and operational efficiency.
+                </p>
+            </div>
+
+            <!-- Primary Outcomes -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl p-6 shadow-lg border-t-4 border-green-500">
+                    <div class="text-3xl mb-3">📈</div>
+                    <h4 class="font-bold text-gray-900 mb-2">↑ Registration Conversion</h4>
+                    <p class="text-sm text-gray-600">Via mobile-optimized forms, saved profiles, and autofill</p>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-lg border-t-4 border-blue-500">
+                    <div class="text-3xl mb-3">😊</div>
+                    <h4 class="font-bold text-gray-900 mb-2">↑ Athlete Satisfaction</h4>
+                    <p class="text-sm text-gray-600">Simplifying access to race info, results, and live tracking</p>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-lg border-t-4 border-purple-500">
+                    <div class="text-3xl mb-3">💰</div>
+                    <h4 class="font-bold text-gray-900 mb-2">↑ Retention & Revenue</h4>
+                    <p class="text-sm text-gray-600">Through personalized recommendations and loyalty elements</p>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-lg border-t-4 border-orange-500">
+                    <div class="text-3xl mb-3">🎧</div>
+                    <h4 class="font-bold text-gray-900 mb-2">↓ Support Volume</h4>
+                    <p class="text-sm text-gray-600">Via in-app access to waivers, race policies, and corrections</p>
+                </div>
+            </div>
+
+            <!-- Key Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-gradient-to-br from-red-600 to-red-700 text-white rounded-xl p-6 text-center">
+                    <div class="text-3xl font-bold">13</div>
+                    <div class="text-sm text-red-200">MVP Features</div>
+                </div>
+                <div class="bg-gradient-to-br from-gray-800 to-gray-900 text-white rounded-xl p-6 text-center">
+                    <div class="text-3xl font-bold">5</div>
+                    <div class="text-sm text-gray-400">Athlete Personas</div>
+                </div>
+                <div class="bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-xl p-6 text-center">
+                    <div class="text-3xl font-bold">2</div>
+                    <div class="text-sm text-blue-200">Fan Personas</div>
+                </div>
+                <div class="bg-gradient-to-br from-green-600 to-green-700 text-white rounded-xl p-6 text-center">
+                    <div class="text-3xl font-bold">Q3</div>
+                    <div class="text-sm text-green-200">2026 Launch</div>
+                </div>
+            </div>
+
+            <!-- Stakeholders -->
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6">Key Stakeholders</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                            <span class="text-xl">👩‍💼</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Geena Silvia</h4>
+                            <p class="text-sm text-gray-500">Director of Digital Platforms • IRONMAN</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span class="text-xl">👨‍💻</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Rahul Sheth</h4>
+                            <p class="text-sm text-gray-500">Product Manager • IRONMAN</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vision & Goals Tab -->
+        <div id="vision" class="tab-content">
+            <div class="gradient-header text-white p-8 rounded-2xl mb-8">
+                <h2 class="text-3xl font-bold mb-2">Vision & Goals</h2>
+                <p class="text-red-100">Strategic direction and success criteria from PRD</p>
+                <a href="https://drive.google.com/file/d/1x0wfUAri8UXKSupwcRdQoqzZjxQt3nRh/view" target="_blank" class="inline-flex items-center gap-2 mt-3 text-sm text-red-200 hover:text-white">
+                    <span>📄</span> View PRD Source Document →
+                </a>
+            </div>
+
+            <!-- Goals -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <span class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center text-green-600">✓</span>
+                    Goals
+                </h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="border-l-4 border-green-500 pl-4">
+                        <h4 class="font-semibold text-gray-900 mb-2">Best-in-Class Mobile App</h4>
+                        <p class="text-sm text-gray-600">Create a mobile app for IRONMAN athletes that centralizes event discovery, registration, profile management, race tracking, and post-race engagement.</p>
+                    </div>
+                    <div class="border-l-4 border-green-500 pl-4">
+                        <h4 class="font-semibold text-gray-900 mb-2">Personalized Experience</h4>
+                        <p class="text-sm text-gray-600">Deliver a personalized athlete experience by leveraging athlete history, milestones, and performance data to tailor content and recommendations.</p>
+                    </div>
+                    <div class="border-l-4 border-green-500 pl-4">
+                        <h4 class="font-semibold text-gray-900 mb-2">Support Entire Race Journey</h4>
+                        <p class="text-sm text-gray-600">From onboarding and account creation to race day execution and post-event highlights, enabling athletes to plan, perform, and reflect seamlessly.</p>
+                    </div>
+                    <div class="border-l-4 border-green-500 pl-4">
+                        <h4 class="font-semibold text-gray-900 mb-2">Live Tracking for Supporters</h4>
+                        <p class="text-sm text-gray-600">Enable live tracking and race visibility for friends, family, and spectators during events to extend the IRONMAN experience beyond the athlete.</p>
+                    </div>
+                    <div class="border-l-4 border-green-500 pl-4">
+                        <h4 class="font-semibold text-gray-900 mb-2">Scalable Multi-Brand Platform</h4>
+                        <p class="text-sm text-gray-600">Build a platform that can support multiple IRONMAN brands (RnR, Epic, etc.) and evolve with future business needs.</p>
+                    </div>
+                    <div class="border-l-4 border-green-500 pl-4">
+                        <h4 class="font-semibold text-gray-900 mb-2">Drive Engagement & Cross-sell</h4>
+                        <p class="text-sm text-gray-600">Surface relevant events, merchandise, and content based on athlete preferences and behaviors.</p>
+                    </div>
+                    <div class="border-l-4 border-green-500 pl-4">
+                        <h4 class="font-semibold text-gray-900 mb-2">Reduce Support Tickets</h4>
+                        <p class="text-sm text-gray-600">Improve self-service via a centralized hub for waivers, deferrals, transfers, and other race services.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Non-Goals -->
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <span class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center text-red-600">✗</span>
+                    Non-Goals (Out of Scope)
+                </h3>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
+                        <span class="text-red-500 mt-1">✗</span>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Not a Platform Replacement</h4>
+                            <p class="text-sm text-gray-600">The app is not intended to replace core registration platforms or timing systems; it will integrate with them.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
+                        <span class="text-red-500 mt-1">✗</span>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Not Fan-Only</h4>
+                            <p class="text-sm text-gray-600">This is not a fan-only app. The primary user is the athlete, though we will support spectator experiences via features like athlete tracking.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
+                        <span class="text-red-500 mt-1">✗</span>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Not for Event Staff/Volunteers</h4>
+                            <p class="text-sm text-gray-600">This release is not focused on event staff/volunteer tooling (though future phases may explore operational modules).</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
+                        <span class="text-red-500 mt-1">✗</span>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">No Full E-commerce in V1</h4>
+                            <p class="text-sm text-gray-600">The app will not offer full merchandising or e-commerce functionality in v1; product linking will redirect to existing stores.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Personas Tab -->
+        <div id="personas" class="tab-content">
+            <div class="gradient-header text-white p-8 rounded-2xl mb-8">
+                <h2 class="text-3xl font-bold mb-2">Target Personas</h2>
+                <p class="text-red-100">5 athlete personas and 2 fan personas from official documentation</p>
+                <a href="https://drive.google.com/file/d/12FJWyqg4Y0y2i6j2lq5XUg0dH9PV5OvI/view" target="_blank" class="inline-flex items-center gap-2 mt-3 text-sm text-red-200 hover:text-white">
+                    <span>📄</span> View Target Personas Source Document →
+                </a>
+            </div>
+
+            <!-- Persona Navigation -->
+            <div class="flex flex-wrap gap-2 mb-8">
+                <button onclick="showPersona('elite', this)" class="persona-btn active px-4 py-2 bg-red-600 text-white rounded-lg font-medium text-sm transition-colors">Elite Competitor</button>
+                <button onclick="showPersona('adventurer', this)" class="persona-btn px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium text-sm hover:bg-gray-300 transition-colors">Destination Adventurer</button>
+                <button onclick="showPersona('achiever', this)" class="persona-btn px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium text-sm hover:bg-gray-300 transition-colors">Everyday Achiever</button>
+                <button onclick="showPersona('believer', this)" class="persona-btn px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium text-sm hover:bg-gray-300 transition-colors">Bucket List Believer</button>
+                <button onclick="showPersona('connector', this)" class="persona-btn px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium text-sm hover:bg-gray-300 transition-colors">Club Connector</button>
+            </div>
+
+            <!-- Elite Competitor -->
+            <div id="persona-elite" class="persona-content">
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="bg-gradient-to-r from-red-600 to-red-800 p-8 text-white">
+                        <div class="flex items-center gap-4">
+                            <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center">
+                                <span class="text-5xl">🏆</span>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold">THE ELITE COMPETITOR</h3>
+                                <p class="text-red-200">Disciplined, data-driven athletes who strive for mastery, podium finishes and recognition</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                    <span class="text-blue-500">👤</span> Who are they?
+                                </h4>
+                                <p class="text-gray-600">The performance minded IRONMAN athlete chasing personal bests, competing for age group rankings and world championship slots. For these A-type personalities, IRONMAN racing is a way of life and they measure success in data, discipline and results.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                    <span class="text-green-500">🎯</span> What motivates them?
+                                </h4>
+                                <p class="text-gray-600">These individuals care deeply about performance improvement and focus heavily on data to drive optimization opportunities in their training. Recognition within the triathlon community matters - they chase AWA status, world championship slots and age group rankings.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                    <span class="text-purple-500">💬</span> How should we talk to them?
+                                </h4>
+                                <p class="text-gray-600">Tone and content should focus on prestige, performance optimization and technical training/gear topics.</p>
+                            </div>
+                            <div class="bg-red-50 rounded-xl p-6">
+                                <div class="mb-4">
+                                    <span class="text-xs text-gray-500 uppercase tracking-wide">Voice & Tone</span>
+                                    <p class="font-semibold text-gray-900">Expert, technical, performance-driven</p>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-gray-500 uppercase tracking-wide">Audience Motivation</span>
+                                    <p class="font-semibold text-gray-900">Mastery, optimization, recognition</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Destination Adventurer -->
+            <div id="persona-adventurer" class="persona-content hidden">
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="bg-gradient-to-r from-blue-600 to-cyan-600 p-8 text-white">
+                        <div class="flex items-center gap-4">
+                            <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center">
+                                <span class="text-5xl">✈️</span>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold">DESTINATION ADVENTURER</h3>
+                                <p class="text-blue-200">Travel-focused athletes who value new experiences, scenic courses and storytelling</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-4">👤 Who are they?</h4>
+                                <p class="text-gray-600">These athletes see each race as an experience and a chance to explore something new. The opportunity to travel, explore and storytelling is just as important as their athletic achievements.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-4">🎯 What motivates them?</h4>
+                                <p class="text-gray-600">These athletes thrive on adventure, discovery and the reward of racing in amazing new destinations. These are often working professionals who integrate IRONMAN racing into their lifestyle and leisure plans.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-4">💬 How should we talk to them?</h4>
+                                <p class="text-gray-600">Inspirational storytelling that focuses on the destination, the experience and cultural opportunities. Discovery, memories and storytelling potential are key.</p>
+                            </div>
+                            <div class="bg-blue-50 rounded-xl p-6">
+                                <div class="mb-4">
+                                    <span class="text-xs text-gray-500 uppercase">Voice & Tone</span>
+                                    <p class="font-semibold text-gray-900">Inspirational, sensory, emotional storytelling</p>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-gray-500 uppercase">Audience Motivation</span>
+                                    <p class="font-semibold text-gray-900">Travel, experience, discovery</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Everyday Achiever -->
+            <div id="persona-achiever" class="persona-content hidden">
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="bg-gradient-to-r from-green-600 to-emerald-600 p-8 text-white">
+                        <div class="flex items-center gap-4">
+                            <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center">
+                                <span class="text-5xl">💪</span>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold">EVERYDAY ACHIEVER</h3>
+                                <p class="text-green-200">Dedicated age group athletes balancing work, family and training</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-4">👤 Who are they?</h4>
+                                <p class="text-gray-600">Hardworking, disciplined individuals balancing training with busy jobs, family and everyday life. They are not the fastest and not chasing championship slots but are loyal athletes that take pride in progress and personal bests. Time is scarce.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-4">🎯 What motivates them?</h4>
+                                <p class="text-gray-600">They seek personal growth, structure and balance. The training and race day experience gives them confidence and identity beyond their family.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-4">💬 How should we talk to them?</h4>
+                                <p class="text-gray-600">Motivational and relatable content. Time is at a premium so content relating to time hacks, balance and perseverance is valued.</p>
+                            </div>
+                            <div class="bg-green-50 rounded-xl p-6">
+                                <div class="mb-4">
+                                    <span class="text-xs text-gray-500 uppercase">Voice & Tone</span>
+                                    <p class="font-semibold text-gray-900">Motivational, relatable, practical</p>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-gray-500 uppercase">Audience Motivation</span>
+                                    <p class="font-semibold text-gray-900">Balance, structure, personal growth</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bucket List Believer -->
+            <div id="persona-believer" class="persona-content hidden">
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="bg-gradient-to-r from-purple-600 to-pink-600 p-8 text-white">
+                        <div class="flex items-center gap-4">
+                            <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center">
+                                <span class="text-5xl">⭐</span>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold">BUCKET LIST BELIEVER</h3>
+                                <p class="text-purple-200">First-timers chasing a once-in-a-lifetime goal to prove Anything Is Possible</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-4">👤 Who are they?</h4>
+                                <p class="text-gray-600">First-timers or casual endurance athletes inspired by the IRONMAN brand's mystique. Often motivated by a personal milestone, challenge or inspirational story. Becoming an IRONMAN is a life goal.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-4">🎯 What motivates them?</h4>
+                                <p class="text-gray-600">Transformation, self-belief and proving they can do something extraordinary. The "Anything Is Possible" promise resonates deeply. The finish line and title of IRONMAN is the ultimate motivator.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-4">💬 How should we talk to them?</h4>
+                                <p class="text-gray-600">Inspirational brand messaging ("Anything is Possible", "Become One") and relatable athlete stories. Encouraging, belief-building, removal of fear/barriers.</p>
+                            </div>
+                            <div class="bg-purple-50 rounded-xl p-6">
+                                <div class="mb-4">
+                                    <span class="text-xs text-gray-500 uppercase">Voice & Tone</span>
+                                    <p class="font-semibold text-gray-900">Emotional, reassuring, empowering</p>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-gray-500 uppercase">Audience Motivation</span>
+                                    <p class="font-semibold text-gray-900">Transformation, confidence, inspiration</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Club Connector -->
+            <div id="persona-connector" class="persona-content hidden">
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="bg-gradient-to-r from-orange-600 to-amber-600 p-8 text-white">
+                        <div class="flex items-center gap-4">
+                            <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center">
+                                <span class="text-5xl">🤝</span>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold">CLUB CONNECTOR</h3>
+                                <p class="text-orange-200">Community focused athletes motivated by camaraderie and teamwork</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-4">👤 Who are they?</h4>
+                                <p class="text-gray-600">Socially driven individuals who thrive in community. Club leaders, members or social group athletes who value belonging as much as performance. The cultural heartbeat of local triathlon scenes.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-4">🎯 What motivates them?</h4>
+                                <p class="text-gray-600">Fueled by camaraderie, teamwork and shared achievements. Recognition, social connection and helping others succeed are central to their motivation.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-4">💬 How should we talk to them?</h4>
+                                <p class="text-gray-600">Focused on inclusivity, community and club identity. Shared achievements and community connection are key pillars.</p>
+                            </div>
+                            <div class="bg-orange-50 rounded-xl p-6">
+                                <div class="mb-4">
+                                    <span class="text-xs text-gray-500 uppercase">Voice & Tone</span>
+                                    <p class="font-semibold text-gray-900">Inclusive, energetic, celebratory</p>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-gray-500 uppercase">Audience Motivation</span>
+                                    <p class="font-semibold text-gray-900">Belonging, community, shared success</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fan Personas -->
+            <div class="mt-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-4">Fan Personas</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-3xl">📣</span>
+                            <div>
+                                <h4 class="font-bold text-gray-900">The Proud Supporter</h4>
+                                <p class="text-sm text-gray-500">Family & friends cheering from sidelines</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600">Spouses, parents, children who want to follow their athlete's race journey and share in the excitement.</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-3xl">🎬</span>
+                            <div>
+                                <h4 class="font-bold text-gray-900">The Enthusiast</h4>
+                                <p class="text-sm text-gray-500">Passionate fans who love the sport</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600">Triathlon fans who follow professional racing, track multiple athletes, and enjoy the competitive drama.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Specs Tab -->
+        <div id="specs" class="tab-content">
+            <div class="gradient-header text-white p-8 rounded-2xl mb-8">
+                <h2 class="text-3xl font-bold mb-2">Feature Specifications</h2>
+                <p class="text-red-100">13 MVP features - Core Features & Requirements</p>
+                <a href="https://drive.google.com/file/d/1x0wfUAri8UXKSupwcRdQoqzZjxQt3nRh/view" target="_blank" class="inline-flex items-center gap-2 mt-3 text-sm text-red-200 hover:text-white">
+                    <span>📄</span> View PRD Source Document →
+                </a>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Feature 1: User Login & Account Creation -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="bg-green-50 p-4 border-b flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="status-badge priority-mvp">MVP</span>
+                            <h3 class="font-bold text-gray-900">1. User Login & Account Creation</h3>
+                        </div>
+                        <span class="text-2xl">🔐</span>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-600 mb-4"><strong>Goal:</strong> Enable secure authentication and profile access.</p>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-semibold text-sm text-gray-900 mb-2">Key Features</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• SSO with existing IRONMAN credentials</li>
+                                    <li>• New account registration flow for all users</li>
+                                    <li>• Extended onboarding flow for athletes</li>
+                                    <li>• Email verification / forgot password flows</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-sm text-gray-900 mb-2">Desired Outcomes</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Quickly create or access an IRONMAN account</li>
+                                    <li>• Seamlessly connect existing athlete profiles</li>
+                                    <li>• Reach personalized home with minimal friction</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 2: Fan Experience -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="bg-green-50 p-4 border-b flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="status-badge priority-mvp">MVP</span>
+                            <h3 class="font-bold text-gray-900">2. Fan Experience</h3>
+                        </div>
+                        <span class="text-2xl">📣</span>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-600 mb-4"><strong>Goal:</strong> Provide a compelling and delightful experience for fans/supporters during event weekends and beyond.</p>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-semibold text-sm text-gray-900 mb-2">Key Features</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Ability to search for and follow athletes</li>
+                                    <li>• Live tracking and leaderboard access</li>
+                                    <li>• Race-specific schedule and maps (course, parking, etc.)</li>
+                                    <li>• Notification subscriptions for key milestones</li>
+                                    <li>• In-app content</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-sm text-gray-900 mb-2">Desired Outcomes</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Easily find and follow one or more athletes</li>
+                                    <li>• View real-time race progress and key moments</li>
+                                    <li>• Feel connected to race day even without participating</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 3: Personalized Dashboard -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="bg-green-50 p-4 border-b flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="status-badge priority-mvp">MVP</span>
+                            <h3 class="font-bold text-gray-900">3. Personalized Dashboard</h3>
+                        </div>
+                        <span class="text-2xl">🏠</span>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-600 mb-4"><strong>Goal:</strong> Central hub where athletes can manage their experience.</p>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-semibold text-sm text-gray-900 mb-2">Key Features</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Personalized race list (past & upcoming with countdown)</li>
+                                    <li>• At-a-glance view of milestones, results, and messages</li>
+                                    <li>• Suggested actions (check-in, registration, etc.)</li>
+                                    <li>• Easily access relevant content e.g. articles, merchandise</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-sm text-gray-900 mb-2">Desired Outcomes</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• See relevant upcoming and past races at a glance</li>
+                                    <li>• Surface next best actions (register, check in, track, view results)</li>
+                                    <li>• Reinforce motivation through progress, reminders, achievements</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+                            <p class="text-sm text-blue-700"><strong>Note:</strong> Content/logic to be refined with STRV</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 4: Race Discovery -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="bg-green-50 p-4 border-b flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="status-badge priority-mvp">MVP</span>
+                            <h3 class="font-bold text-gray-900">4. Race Discovery</h3>
+                        </div>
+                        <span class="text-2xl">🔍</span>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-600 mb-4"><strong>Goal:</strong> Help athletes and fans explore IRONMAN events globally.</p>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-semibold text-sm text-gray-900 mb-2">Key Features</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Search and filter events by location, date, distance</li>
+                                    <li>• Visual calendar and/or map view</li>
+                                    <li>• Individual race detail pages</li>
+                                    <li>• Add to "My Races" or begin registration</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-sm text-gray-900 mb-2">Desired Outcomes</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Explore races matching location, timing, and distance preferences</li>
+                                    <li>• Take a quiz or compare events to identify the right next race</li>
+                                    <li>• Initiate registration directly from discovery</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features 5-6 -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="status-badge priority-mvp">MVP</span>
+                            <span class="text-2xl">📝</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-2">5. Race Registration</h3>
+                        <p class="text-sm text-gray-600 mb-3"><strong>Goal:</strong> Allow users to register for events with express checkout.</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <h4 class="font-semibold text-xs text-gray-900 mb-1">Key Features</h4>
+                                <ul class="text-xs text-gray-500 space-y-1">
+                                    <li>• Start registration flow (in-app)</li>
+                                    <li>• View current registration status</li>
+                                    <li>• Waivers, terms, and payment</li>
+                                    <li>• Express checkout</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-xs text-gray-900 mb-1">Outcomes</h4>
+                                <ul class="text-xs text-gray-500 space-y-1">
+                                    <li>• Complete registration quickly</li>
+                                    <li>• Reuse saved profiles (USAT), waivers</li>
+                                    <li>• Immediate confirmation</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="status-badge priority-mvp">MVP</span>
+                            <span class="text-2xl">⚙️</span>
+                        </div>
+                        <h3 class="font-bold text-gray-900 mb-2">6. Race Management</h3>
+                        <p class="text-sm text-gray-600 mb-3"><strong>Goal:</strong> Enable athletes to manage race registrations.</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <h4 class="font-semibold text-xs text-gray-900 mb-1">Key Features</h4>
+                                <ul class="text-xs text-gray-500 space-y-1">
+                                    <li>• View registration details & action items</li>
+                                    <li>• Transfers, withdrawals, deferrals via smart form</li>
+                                    <li>• Flex90 integration</li>
+                                    <li>• Status and confirmation messages</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-xs text-gray-900 mb-1">Outcomes</h4>
+                                <ul class="text-xs text-gray-500 space-y-1">
+                                    <li>• Self-manage without support</li>
+                                    <li>• Understand policies & deadlines</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features 7-9 -->
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-xl shadow-lg p-5">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="status-badge priority-mvp text-xs">MVP</span>
+                            <span class="text-xl">📅</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 mb-1 text-sm">7. Race Week Experience</h4>
+                        <p class="text-xs text-gray-600 mb-2"><strong>Goal:</strong> Curated experience during race week.</p>
+                        <ul class="text-xs text-gray-500 space-y-1">
+                            <li>• Daily countdown and prep checklist</li>
+                            <li>• Expo info and athlete briefing</li>
+                            <li>• Weather, traffic, venue maps</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-5">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="status-badge priority-mvp text-xs">MVP</span>
+                            <span class="text-xl">🏁</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 mb-1 text-sm">8. Race Day & Check-in</h4>
+                        <p class="text-xs text-gray-600 mb-2"><strong>Goal:</strong> Central hub for race-day logistics.</p>
+                        <ul class="text-xs text-gray-500 space-y-1">
+                            <li>• Digital check-in with QR code (add to wallet)</li>
+                            <li>• Real-time updates and alerts</li>
+                            <li>• Fan navigation (where to spectate, ETA)</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-5">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="status-badge priority-mvp text-xs">MVP</span>
+                            <span class="text-xl">🏆</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 mb-1 text-sm">9. Post-Race & Results</h4>
+                        <p class="text-xs text-gray-600 mb-2"><strong>Goal:</strong> Celebrate accomplishment, encourage sharing.</p>
+                        <ul class="text-xs text-gray-500 space-y-1">
+                            <li>• Finish time, splits, rankings, certificate</li>
+                            <li>• Social share options</li>
+                            <li>• Recovery content and feedback survey</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Features 10-13 -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-xl shadow-lg p-5">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="status-badge priority-mvp text-xs">MVP</span>
+                            <span class="text-xl">👤</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 mb-1 text-sm">10. Athlete Profile Management</h4>
+                        <p class="text-xs text-gray-600 mb-2"><strong>Goal:</strong> Centralize personal details, race history, achievements.</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <ul class="text-xs text-gray-500 space-y-1">
+                                <li>• Update personal information</li>
+                                <li>• Race history & performance tracking</li>
+                            </ul>
+                            <ul class="text-xs text-gray-500 space-y-1">
+                                <li>• Shareable milestones</li>
+                                <li>• Club affiliations & progress</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-5">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="status-badge priority-mvp text-xs">MVP</span>
+                            <span class="text-xl">🔔</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 mb-1 text-sm">11. Notifications Center</h4>
+                        <p class="text-xs text-gray-600 mb-2"><strong>Goal:</strong> Keep athletes and fans informed with timely messages.</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <ul class="text-xs text-gray-500 space-y-1">
+                                <li>• Push notifications (alerts, reminders, achievements)</li>
+                                <li>• In-app inbox or digest view</li>
+                            </ul>
+                            <ul class="text-xs text-gray-500 space-y-1">
+                                <li>• Manage notification preferences</li>
+                                <li>• Global and event level</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-5">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="status-badge priority-mvp text-xs">MVP</span>
+                            <span class="text-xl">📍</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 mb-1 text-sm">12. Athlete Tracking (During Events)</h4>
+                        <p class="text-xs text-gray-600 mb-2"><strong>Goal:</strong> Enable live tracking of athletes in real time.</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <ul class="text-xs text-gray-500 space-y-1">
+                                <li>• Live map view via RTRT</li>
+                                <li>• Estimated finish time projections</li>
+                            </ul>
+                            <ul class="text-xs text-gray-500 space-y-1">
+                                <li>• Live splits and leaderboards</li>
+                                <li>• Push notifications for milestones</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-5">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="status-badge priority-mvp text-xs">MVP</span>
+                            <span class="text-xl">🎧</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 mb-1 text-sm">13. Customer Support</h4>
+                        <p class="text-xs text-gray-600 mb-2"><strong>Goal:</strong> Empower users to get timely help and resolve issues.</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <ul class="text-xs text-gray-500 space-y-1">
+                                <li>• Help Center and FAQs</li>
+                                <li>• Live chat or support ticketing</li>
+                            </ul>
+                            <ul class="text-xs text-gray-500 space-y-1">
+                                <li>• Contact Us form</li>
+                                <li>• Resolve issues in-app</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen Inventory Tab -->
+        <div id="screens" class="tab-content">
+            <div class="gradient-header text-white p-8 rounded-2xl mb-8">
+                <h2 class="text-3xl font-bold mb-2">Screen Inventory & User Flows</h2>
+                <p class="text-red-100">Comprehensive screen list + key user journeys</p>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white rounded-xl p-6 text-center shadow">
+                    <div class="text-3xl font-bold text-red-600">45+</div>
+                    <div class="text-sm text-gray-500">Total Screens</div>
+                </div>
+                <div class="bg-white rounded-xl p-6 text-center shadow">
+                    <div class="text-3xl font-bold text-green-600">13</div>
+                    <div class="text-sm text-gray-500">MVP Features</div>
+                </div>
+                <div class="bg-white rounded-xl p-6 text-center shadow">
+                    <div class="text-3xl font-bold text-blue-600">6</div>
+                    <div class="text-sm text-gray-500">Core User Flows</div>
+                </div>
+                <div class="bg-white rounded-xl p-6 text-center shadow">
+                    <div class="text-3xl font-bold text-purple-600">2</div>
+                    <div class="text-sm text-gray-500">User Types</div>
+                </div>
+            </div>
+
+            <!-- User Types -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">👥 Primary User Types</h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-red-50 rounded-xl p-4 border-2 border-red-200">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-2xl">🏃</span>
+                            <h4 class="font-bold text-gray-900">Athlete</h4>
+                        </div>
+                        <p class="text-sm text-gray-600">Registered IRONMAN athletes who race. Full access to registration, profile, race management, results, and tracking.</p>
+                    </div>
+                    <div class="bg-blue-50 rounded-xl p-4 border-2 border-blue-200">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-2xl">📣</span>
+                            <h4 class="font-bold text-gray-900">Fan / Supporter</h4>
+                        </div>
+                        <p class="text-sm text-gray-600">Friends, family, spectators. Can track athletes, view schedules/maps, receive notifications, but cannot register.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen Inventory by Feature -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+                <h3 class="text-lg font-bold text-gray-900 mb-6">📱 Screen Inventory by Feature</h3>
+                <div class="space-y-4">
+                    <div class="border-l-4 border-red-500 pl-4">
+                        <h4 class="font-bold text-gray-900 mb-2 text-sm">🔐 1. Login & Account</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Splash</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Welcome</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Login</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Register</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Forgot Password</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Email Verify</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Onboarding</span>
+                        </div>
+                    </div>
+                    <div class="border-l-4 border-blue-500 pl-4">
+                        <h4 class="font-bold text-gray-900 mb-2 text-sm">📣 2. Fan Experience</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Fan Home</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Athlete Search</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Following List</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Race Schedule</span>
+                        </div>
+                    </div>
+                    <div class="border-l-4 border-green-500 pl-4">
+                        <h4 class="font-bold text-gray-900 mb-2 text-sm">🏠 3. Dashboard + 🔍 4. Discovery</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Athlete Home</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">My Races</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Event Catalog</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Filters</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Calendar View</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Map View</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Race Detail</span>
+                        </div>
+                    </div>
+                    <div class="border-l-4 border-orange-500 pl-4">
+                        <h4 class="font-bold text-gray-900 mb-2 text-sm">📝 5. Registration + ⚙️ 6. Management</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Registration Start</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Personal Info</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Add-ons</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Waiver</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Payment</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Confirmation</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">My Registrations</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Transfer/Deferral</span>
+                        </div>
+                    </div>
+                    <div class="border-l-4 border-purple-500 pl-4">
+                        <h4 class="font-bold text-gray-900 mb-2 text-sm">📅 7-8. Race Week & Day</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Race Week Hub</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Checklist</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Expo Info</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Weather</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Race Day Hub</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Digital Check-in</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">QR Code</span>
+                        </div>
+                    </div>
+                    <div class="border-l-4 border-pink-500 pl-4">
+                        <h4 class="font-bold text-gray-900 mb-2 text-sm">🏆 9. Results + 📍 12. Tracking</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Live Map</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Splits</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Leaderboard</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Results Summary</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Certificate</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Share</span>
+                        </div>
+                    </div>
+                    <div class="border-l-4 border-indigo-500 pl-4">
+                        <h4 class="font-bold text-gray-900 mb-2 text-sm">👤 10-11-13. Profile, Notifications, Support</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Profile Overview</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Edit Profile</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Race History</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Achievements</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Notifications</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Preferences</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Help Center</span>
+                            <span class="bg-gray-100 px-2 py-1 rounded text-xs">Contact</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Flows -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+                <h3 class="text-lg font-bold text-gray-900 mb-6">🔄 Core User Flows</h3>
+
+                <!-- Flow 1 -->
+                <div class="mb-6">
+                    <h4 class="font-bold text-sm text-gray-900 mb-3 flex items-center gap-2">
+                        <span class="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs">1</span>
+                        New User Onboarding (Athlete)
+                    </h4>
+                    <div class="bg-gray-50 rounded-xl p-3 overflow-x-auto">
+                        <div class="flex items-center gap-1 text-xs min-w-max">
+                            <span class="bg-white px-2 py-1 rounded shadow">App Open</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Welcome</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Register/Login</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Email Verify</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Link Profile?</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Preferences</span><span class="text-gray-400">→</span>
+                            <span class="bg-red-100 px-2 py-1 rounded shadow text-red-700 font-medium">Athlete Home</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flow 2 -->
+                <div class="mb-6">
+                    <h4 class="font-bold text-sm text-gray-900 mb-3 flex items-center gap-2">
+                        <span class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs">2</span>
+                        Fan Tracking Journey
+                    </h4>
+                    <div class="bg-gray-50 rounded-xl p-3 overflow-x-auto">
+                        <div class="flex items-center gap-1 text-xs min-w-max">
+                            <span class="bg-white px-2 py-1 rounded shadow">Fan Home</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Search Athlete</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Follow</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Enable Alerts</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Race Day Alert</span><span class="text-gray-400">→</span>
+                            <span class="bg-blue-100 px-2 py-1 rounded shadow text-blue-700 font-medium">Live Map</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flow 3 -->
+                <div class="mb-6">
+                    <h4 class="font-bold text-sm text-gray-900 mb-3 flex items-center gap-2">
+                        <span class="w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-xs">3</span>
+                        Race Discovery → Registration
+                    </h4>
+                    <div class="bg-gray-50 rounded-xl p-3 overflow-x-auto">
+                        <div class="flex items-center gap-1 text-xs min-w-max">
+                            <span class="bg-white px-2 py-1 rounded shadow">Event Catalog</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Filter/Search</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Race Detail</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Start Registration</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Form + Add-ons</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Waiver</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Payment</span><span class="text-gray-400">→</span>
+                            <span class="bg-green-100 px-2 py-1 rounded shadow text-green-700 font-medium">Confirmation</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flow 4 -->
+                <div class="mb-6">
+                    <h4 class="font-bold text-sm text-gray-900 mb-3 flex items-center gap-2">
+                        <span class="w-6 h-6 bg-purple-600 text-white rounded-full flex items-center justify-center text-xs">4</span>
+                        Race Week → Race Day
+                    </h4>
+                    <div class="bg-gray-50 rounded-xl p-3 overflow-x-auto">
+                        <div class="flex items-center gap-1 text-xs min-w-max">
+                            <span class="bg-white px-2 py-1 rounded shadow">Race Week Hub</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Checklist</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Expo/Briefing</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Weather</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Digital Check-in</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Add to Wallet</span><span class="text-gray-400">→</span>
+                            <span class="bg-purple-100 px-2 py-1 rounded shadow text-purple-700 font-medium">Race Day Hub</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flow 5 -->
+                <div class="mb-6">
+                    <h4 class="font-bold text-sm text-gray-900 mb-3 flex items-center gap-2">
+                        <span class="w-6 h-6 bg-orange-600 text-white rounded-full flex items-center justify-center text-xs">5</span>
+                        Post-Race Experience
+                    </h4>
+                    <div class="bg-gray-50 rounded-xl p-3 overflow-x-auto">
+                        <div class="flex items-center gap-1 text-xs min-w-max">
+                            <span class="bg-white px-2 py-1 rounded shadow">Finish Alert</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Results</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Splits</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Certificate</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Share</span><span class="text-gray-400">→</span>
+                            <span class="bg-orange-100 px-2 py-1 rounded shadow text-orange-700 font-medium">Next Race</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flow 6 -->
+                <div>
+                    <h4 class="font-bold text-sm text-gray-900 mb-3 flex items-center gap-2">
+                        <span class="w-6 h-6 bg-cyan-600 text-white rounded-full flex items-center justify-center text-xs">6</span>
+                        Registration Management (Transfer/Deferral)
+                    </h4>
+                    <div class="bg-gray-50 rounded-xl p-3 overflow-x-auto">
+                        <div class="flex items-center gap-1 text-xs min-w-max">
+                            <span class="bg-white px-2 py-1 rounded shadow">My Registrations</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Registration Detail</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Request Change</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Flex90 Form</span><span class="text-gray-400">→</span>
+                            <span class="bg-white px-2 py-1 rounded shadow">Review Policy</span><span class="text-gray-400">→</span>
+                            <span class="bg-cyan-100 px-2 py-1 rounded shadow text-cyan-700 font-medium">Confirmation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">🧭 Proposed Bottom Navigation</h3>
+                <div class="bg-gray-900 rounded-xl p-4">
+                    <div class="flex justify-around items-end">
+                        <div class="text-center">
+                            <div class="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center mx-auto mb-1"><span class="text-white">🏠</span></div>
+                            <p class="text-white text-xs">Home</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center mx-auto mb-1"><span class="text-gray-400">🔍</span></div>
+                            <p class="text-gray-400 text-xs">Discover</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center mx-auto mb-1"><span class="text-gray-400">📍</span></div>
+                            <p class="text-gray-400 text-xs">Track</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center mx-auto mb-1"><span class="text-gray-400">🔔</span></div>
+                            <p class="text-gray-400 text-xs">Alerts</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center mx-auto mb-1"><span class="text-gray-400">👤</span></div>
+                            <p class="text-gray-400 text-xs">Profile</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Metrics Tab -->
+        <div id="metrics" class="tab-content">
+            <div class="gradient-header text-white p-8 rounded-2xl mb-8">
+                <h2 class="text-3xl font-bold mb-2">Success Metrics & KPIs</h2>
+                <p class="text-red-100">Key performance indicators from PRD</p>
+                <a href="https://drive.google.com/file/d/1x0wfUAri8UXKSupwcRdQoqzZjxQt3nRh/view" target="_blank" class="inline-flex items-center gap-2 mt-3 text-sm text-red-200 hover:text-white">
+                    <span>📄</span> View PRD Source Document →
+                </a>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h4 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <span class="text-blue-500">📲</span> Adoption & Reach
+                    </h4>
+                    <ul class="text-sm text-gray-600 space-y-2">
+                        <li>• Total App Downloads</li>
+                        <li>• New Account Creations</li>
+                        <li>• Activation Rate (downloads → first login)</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h4 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <span class="text-green-500">📊</span> Engagement
+                    </h4>
+                    <ul class="text-sm text-gray-600 space-y-2">
+                        <li>• Daily Active Users (DAU)</li>
+                        <li>• Monthly Active Users (MAU)</li>
+                        <li>• DAU/MAU Stickiness</li>
+                        <li>• Session Frequency & Duration</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h4 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <span class="text-purple-500">🔄</span> Retention
+                    </h4>
+                    <ul class="text-sm text-gray-600 space-y-2">
+                        <li>• 7-Day Retention</li>
+                        <li>• 30-Day Retention</li>
+                        <li>• Retention tied to event cycles</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h4 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <span class="text-yellow-500">⭐</span> Satisfaction
+                    </h4>
+                    <ul class="text-sm text-gray-600 space-y-2">
+                        <li>• App Store Ratings & Reviews</li>
+                        <li>• Net Promoter Score (NPS)</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h4 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <span class="text-red-500">💳</span> Conversion
+                    </h4>
+                    <ul class="text-sm text-gray-600 space-y-2">
+                        <li>• Registration Conversion Rate</li>
+                        <li>• Time to Complete Registration</li>
+                        <li>• Feature Adoption (Profile, Tracking)</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h4 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <span class="text-orange-500">💰</span> Business Impact
+                    </h4>
+                    <ul class="text-sm text-gray-600 space-y-2">
+                        <li>• App-Driven Registrations</li>
+                        <li>• Cross-Sell CTR (merch/events)</li>
+                        <li>• Live Tracking Opt-in Rates</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Architecture Tab -->
+        <div id="architecture" class="tab-content">
+            <div class="gradient-header text-white p-8 rounded-2xl mb-8">
+                <h2 class="text-3xl font-bold mb-2">System Architecture</h2>
+                <p class="text-red-100">Technical stack and infrastructure based on reverse-engineering analysis</p>
+                <div class="flex flex-wrap gap-3 mt-3">
+                    <a href="https://learn.microsoft.com/en-us/azure/active-directory-b2c/" target="_blank" class="inline-flex items-center gap-1 text-xs bg-white/20 px-2 py-1 rounded hover:bg-white/30">Azure AD B2C Docs →</a>
+                    <a href="https://go.rtrt.me/docs/api/rest" target="_blank" class="inline-flex items-center gap-1 text-xs bg-white/20 px-2 py-1 rounded hover:bg-white/30">RTRT.me API Docs →</a>
+                    <a href="https://documentation.onesignal.com/docs/en/react-native-expo-sdk-setup" target="_blank" class="inline-flex items-center gap-1 text-xs bg-white/20 px-2 py-1 rounded hover:bg-white/30">OneSignal Expo Setup →</a>
+                </div>
+            </div>
+
+            <!-- Current IRONMAN Infrastructure -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <span class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center text-red-600">🏢</span>
+                    Current IRONMAN.com Infrastructure
+                </h3>
+                <p class="text-gray-600 mb-6">Based on reverse-engineering analysis of ironman.com, the existing web infrastructure uses the following technology stack:</p>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="border-l-4 border-blue-500 pl-4">
+                        <h4 class="font-semibold text-gray-900 mb-2">Cloud & Backend</h4>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>• Microsoft Azure (cloud infrastructure)</li>
+                            <li>• Microsoft ASP.NET (backend framework)</li>
+                            <li>• HTTP/3 protocol support</li>
+                        </ul>
+                    </div>
+                    <div class="border-l-4 border-green-500 pl-4">
+                        <h4 class="font-semibold text-gray-900 mb-2">Analytics & Monitoring</h4>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>• Microsoft Clarity (session recording)</li>
+                            <li>• Brandwatch (social listening)</li>
+                            <li>• RaceRanger (drafting analytics)</li>
+                        </ul>
+                    </div>
+                    <div class="border-l-4 border-purple-500 pl-4">
+                        <h4 class="font-semibold text-gray-900 mb-2">Frontend & Design</h4>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>• Moment.js (date/time handling)</li>
+                            <li>• Adobe Fonts (typography)</li>
+                            <li>• Adobe Acrobat DC (documents)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Proposed Mobile App Architecture -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <span class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center text-green-600">📱</span>
+                    Proposed Mobile App Architecture
+                </h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span class="text-blue-500">📲</span> Frontend Stack
+                        </h4>
+                        <div class="bg-gray-50 rounded-xl p-5">
+                            <table class="w-full text-sm">
+                                <tr class="border-b">
+                                    <td class="py-2 font-medium text-gray-700">Framework</td>
+                                    <td class="py-2 text-gray-600">React Native + Expo SDK 50+</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="py-2 font-medium text-gray-700">Language</td>
+                                    <td class="py-2 text-gray-600">TypeScript (strict mode)</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="py-2 font-medium text-gray-700">State Management</td>
+                                    <td class="py-2 text-gray-600">Zustand + React Query</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="py-2 font-medium text-gray-700">Navigation</td>
+                                    <td class="py-2 text-gray-600">Expo Router (file-based)</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="py-2 font-medium text-gray-700">Styling</td>
+                                    <td class="py-2 text-gray-600">NativeWind (Tailwind CSS)</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 font-medium text-gray-700">Maps</td>
+                                    <td class="py-2 text-gray-600">react-native-maps + Google Maps</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span class="text-green-500">⚙️</span> Backend & Services
+                        </h4>
+                        <div class="bg-gray-50 rounded-xl p-5">
+                            <table class="w-full text-sm">
+                                <tr class="border-b">
+                                    <td class="py-2 font-medium text-gray-700">Authentication</td>
+                                    <td class="py-2 text-gray-600">Azure AD B2C (email/password only)</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="py-2 font-medium text-gray-700">Data Warehouse</td>
+                                    <td class="py-2 text-gray-600">Snowflake</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="py-2 font-medium text-gray-700">CMS</td>
+                                    <td class="py-2 text-gray-600">Drupal (event content)</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="py-2 font-medium text-gray-700">Cache Layer</td>
+                                    <td class="py-2 text-gray-600">Redis</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="py-2 font-medium text-gray-700">CRM</td>
+                                    <td class="py-2 text-gray-600">Microsoft Dynamics 365</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 font-medium text-gray-700">Cloud</td>
+                                    <td class="py-2 text-gray-600">Microsoft Azure</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Authentication Deep Dive -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <span class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center text-yellow-600">🔐</span>
+                    Authentication Architecture (Azure AD B2C)
+                </h3>
+                <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
+                    <p class="text-sm text-yellow-800"><strong>⚠️ Important:</strong> Azure AD B2C will no longer be available for new customers after May 1, 2025. Consider Microsoft Entra External ID for future implementations.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-3">Implementation Approach</h4>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li>• <strong>Library:</strong> react-native-app-auth with Azure AD B2C provider</li>
+                            <li>• <strong>Issuer URL:</strong> <code class="bg-gray-100 px-2 py-1 rounded text-xs">https://&lt;tenant&gt;.b2clogin.com/&lt;tenant&gt;.onmicrosoft.com/&lt;user_flow&gt;/v2.0</code></li>
+                            <li>• <strong>Scopes:</strong> openid, offline_access</li>
+                            <li>• <strong>Token Handling:</strong> Bearer tokens in Authorization header</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-3">User Flows Required</h4>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li>• <strong>susi:</strong> Combined Sign-in/Sign-up flow</li>
+                            <li>• <strong>edit_profile:</strong> Profile editing flow</li>
+                            <li>• <strong>reset_password:</strong> Password reset flow</li>
+                        </ul>
+                        <div class="mt-4 p-3 bg-red-50 rounded-lg">
+                            <p class="text-sm text-red-700"><strong>No Social Login:</strong> Per PRD, email/password only to avoid duplicate account issues</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Architecture -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <span class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">🗄️</span>
+                    Data Architecture (Snowflake)
+                </h3>
+                <p class="text-gray-600 mb-6">Snowflake serves as the central data warehouse for athlete data, race results, and historical performance. Notable: Snowflake is the Official Data Collaboration Provider for LA28 Olympics and Team USA.</p>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-blue-50 rounded-xl p-5">
+                        <h4 class="font-semibold text-gray-900 mb-3">Athlete Data</h4>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>• Race history & results</li>
+                            <li>• Personal bests & splits</li>
+                            <li>• AWA status & rankings</li>
+                            <li>• Registration history</li>
+                        </ul>
+                    </div>
+                    <div class="bg-blue-50 rounded-xl p-5">
+                        <h4 class="font-semibold text-gray-900 mb-3">Event Data</h4>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>• Event catalog & details</li>
+                            <li>• Course information</li>
+                            <li>• Historical race data</li>
+                            <li>• Pricing & availability</li>
+                        </ul>
+                    </div>
+                    <div class="bg-blue-50 rounded-xl p-5">
+                        <h4 class="font-semibold text-gray-900 mb-3">Analytics</h4>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>• Personalization signals</li>
+                            <li>• Recommendation engine data</li>
+                            <li>• Cross-sell opportunities</li>
+                            <li>• Engagement metrics</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CRM Architecture -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <span class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600">👥</span>
+                    CRM Architecture (Microsoft Dynamics 365)
+                </h3>
+                <p class="text-gray-600 mb-6">Dynamics 365 provides Fan Relationship Management (FRM) capabilities designed for sports and events, centralizing data and enabling engagement processes.</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-3">Fan Engagement Features</h4>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li>• Athlete lifecycle management (registration → race → post-race)</li>
+                            <li>• Lead, account & opportunity management</li>
+                            <li>• Ticketing & subscription management</li>
+                            <li>• Sponsorship & advertising tracking</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-3">Sports Management Capabilities</h4>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li>• Event & venue management</li>
+                            <li>• Performance dashboards</li>
+                            <li>• Recruitment & talent tracking</li>
+                            <li>• Integration with Microsoft 365 suite</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Architecture Diagram -->
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6">High-Level Architecture Diagram</h3>
+                <div class="bg-gray-900 rounded-xl p-8 text-white font-mono text-sm overflow-x-auto">
+                    <pre>
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              IRONMAN MOBILE APP                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   ┌─────────────┐     ┌─────────────┐     ┌─────────────┐                   │
+│   │   iOS App   │     │ Android App │     │   Web App   │                   │
+│   │ (Expo/RN)   │     │  (Expo/RN)  │     │  (Future)   │                   │
+│   └──────┬──────┘     └──────┬──────┘     └──────┬──────┘                   │
+│          │                   │                   │                          │
+│          └───────────────────┼───────────────────┘                          │
+│                              │                                              │
+│                              ▼                                              │
+│   ┌─────────────────────────────────────────────────────────────────────┐   │
+│   │                        API GATEWAY (Azure)                          │   │
+│   └─────────────────────────────────────────────────────────────────────┘   │
+│                              │                                              │
+│          ┌───────────────────┼───────────────────┐                          │
+│          │                   │                   │                          │
+│          ▼                   ▼                   ▼                          │
+│   ┌─────────────┐     ┌─────────────┐     ┌─────────────┐                   │
+│   │  Azure AD   │     │   Drupal    │     │  Dynamics   │                   │
+│   │    B2C      │     │    CMS      │     │    365      │                   │
+│   │   (Auth)    │     │  (Content)  │     │   (CRM)     │                   │
+│   └─────────────┘     └─────────────┘     └─────────────┘                   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                           EXTERNAL INTEGRATIONS                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   ┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌──────────┐  │
+│   │  RTRT.me    │     │ Active.com  │     │  Stripe/    │     │ OneSignal│  │
+│   │  (Tracking) │     │ (Registr.)  │     │   Adyen     │     │  (Push)  │  │
+│   │  REST/TCP   │     │   API       │     │ (Payments)  │     │          │  │
+│   └─────────────┘     └─────────────┘     └─────────────┘     └──────────┘  │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                              DATA LAYER                                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   ┌───────────────────────────────────┐     ┌─────────────────────────────┐ │
+│   │           SNOWFLAKE               │     │          REDIS              │ │
+│   │      (Data Warehouse)             │     │        (Cache)              │ │
+│   │  • Athlete data & history         │     │  • Session data             │ │
+│   │  • Race results & splits          │     │  • API response cache       │ │
+│   │  • Event catalog                  │     │  • Real-time tracking       │ │
+│   │  • Analytics & recommendations    │     │                             │ │
+│   └───────────────────────────────────┘     └─────────────────────────────┘ │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+                    </pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Integrations Tab -->
+        <div id="integrations" class="tab-content">
+            <div class="gradient-header text-white p-8 rounded-2xl mb-8">
+                <h2 class="text-3xl font-bold mb-2">Integrations</h2>
+                <p class="text-red-100">External systems and API specifications</p>
+                <div class="flex flex-wrap gap-3 mt-3">
+                    <a href="https://rtrt.me/" target="_blank" class="inline-flex items-center gap-1 text-xs bg-white/20 px-2 py-1 rounded hover:bg-white/30">RTRT.me →</a>
+                    <a href="https://developer.active.com/" target="_blank" class="inline-flex items-center gap-1 text-xs bg-white/20 px-2 py-1 rounded hover:bg-white/30">Active.com API →</a>
+                    <a href="https://stripe.com/docs" target="_blank" class="inline-flex items-center gap-1 text-xs bg-white/20 px-2 py-1 rounded hover:bg-white/30">Stripe Docs →</a>
+                    <a href="https://onesignal.com/docs" target="_blank" class="inline-flex items-center gap-1 text-xs bg-white/20 px-2 py-1 rounded hover:bg-white/30">OneSignal Docs →</a>
+                    <a href="https://mixpanel.com/docs" target="_blank" class="inline-flex items-center gap-1 text-xs bg-white/20 px-2 py-1 rounded hover:bg-white/30">Mixpanel Docs →</a>
+                </div>
+            </div>
+
+            <!-- RTRT.me Deep Dive -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center">
+                        <span class="text-3xl">📡</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">RTRT.me - Real-Time Race Tracking</h3>
+                        <p class="text-sm text-gray-500">Live tracking, split times, and athlete location</p>
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-3">API Specifications</h4>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li>• <strong>Protocol:</strong> JSON + REST (HTTPS)</li>
+                            <li>• <strong>Live Data:</strong> TCP connections for real-time feeds</li>
+                            <li>• <strong>Authentication:</strong> Application ID in query string</li>
+                            <li>• <strong>Endpoints:</strong> profiles, splits, locations</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-3">Key Features</h4>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li>• Real-time athlete position ('loc' object with coords)</li>
+                            <li>• Estimated miles/percentage ('emiles', 'epc')</li>
+                            <li>• Split versioning ('_ver' for cache invalidation)</li>
+                            <li>• Checkpoint timing data</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-4 bg-gray-50 rounded-lg p-4">
+                    <p class="text-xs text-gray-500 font-mono">GET https://api.rtrt.me/events/{eventId}/participants/{bibNumber}/splits?appId={YOUR_APP_ID}</p>
+                </div>
+            </div>
+
+            <!-- Active.com Deep Dive -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center">
+                        <span class="text-3xl">📝</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">Active.com (ACTIVEWorks Endurance)</h3>
+                        <p class="text-sm text-gray-500">Official Registration Partner since 2000s</p>
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-3">Platform Capabilities</h4>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li>• Single global platform across 45+ countries</li>
+                            <li>• 13 currencies, 12+ payment types</li>
+                            <li>• Handles "rush events" (thousands/minute)</li>
+                            <li>• On-site check-in via mobile devices</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-3">API Integration</h4>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li>• <strong>Search API:</strong> api.amp.active.com/v2/search/</li>
+                            <li>• <strong>ACTIVE Access:</strong> Open data platform</li>
+                            <li>• Event search by location, date, type</li>
+                            <li>• Registration status & confirmation</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-4 bg-blue-50 rounded-lg p-4">
+                    <p class="text-sm text-blue-800"><strong>Partnership:</strong> Multi-year agreement supporting 260+ events annually with consolidated global backend</p>
+                </div>
+            </div>
+
+            <!-- OneSignal Deep Dive -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center">
+                        <span class="text-3xl">🔔</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">OneSignal - Push Notifications</h3>
+                        <p class="text-sm text-gray-500">Cross-platform push notification service</p>
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-3">Expo Integration</h4>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li>• <strong>Plugin:</strong> onesignal-expo-plugin</li>
+                            <li>• No ejection required for Expo managed workflow</li>
+                            <li>• Configure in app.json/app.config.js</li>
+                            <li>• Supports APNs (iOS), FCM (Android)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-3">Event Listeners</h4>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li>• <code class="bg-gray-100 px-1 rounded">addClickListener()</code> - Deep linking on tap</li>
+                            <li>• <code class="bg-gray-100 px-1 rounded">addForegroundLifecycleListener()</code> - Foreground behavior</li>
+                            <li>• <code class="bg-gray-100 px-1 rounded">addPermissionObserver()</code> - Permission tracking</li>
+                            <li>• <code class="bg-gray-100 px-1 rounded">addObserver()</code> - Subscription status</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-4 bg-orange-50 rounded-lg p-4">
+                    <p class="text-sm text-orange-800"><strong>Best Practice:</strong> Use in-app messages to explain push value before requesting permission (not on first app open)</p>
+                </div>
+            </div>
+
+            <!-- Other Integrations Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h4 class="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                        <span class="text-2xl">💳</span> Stripe/Adyen
+                    </h4>
+                    <p class="text-sm text-gray-600 mb-3">Payment processing for registrations</p>
+                    <ul class="text-xs text-gray-500 space-y-1">
+                        <li>• Apple Pay & Google Pay support</li>
+                        <li>• Saved card management</li>
+                        <li>• PCI-compliant tokenization</li>
+                        <li>• Multi-currency support</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h4 class="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                        <span class="text-2xl">📊</span> Mixpanel
+                    </h4>
+                    <p class="text-sm text-gray-600 mb-3">Product analytics & user behavior</p>
+                    <ul class="text-xs text-gray-500 space-y-1">
+                        <li>• Event tracking & funnels</li>
+                        <li>• User segmentation</li>
+                        <li>• Retention analysis</li>
+                        <li>• A/B testing support</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h4 class="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                        <span class="text-2xl">🗺️</span> Google Maps SDK
+                    </h4>
+                    <p class="text-sm text-gray-600 mb-3">Maps and location services</p>
+                    <ul class="text-xs text-gray-500 space-y-1">
+                        <li>• Course map overlays</li>
+                        <li>• Athlete position tracking</li>
+                        <li>• Venue & checkpoint markers</li>
+                        <li>• Turn-by-turn navigation</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h4 class="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                        <span class="text-2xl">🔄</span> Flex90
+                    </h4>
+                    <p class="text-sm text-gray-600 mb-3">Registration modification service</p>
+                    <ul class="text-xs text-gray-500 space-y-1">
+                        <li>• Race transfers</li>
+                        <li>• Deferrals & rollovers</li>
+                        <li>• Upgrade/downgrade distance</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h4 class="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                        <span class="text-2xl">🌤️</span> Weather API
+                    </h4>
+                    <p class="text-sm text-gray-600 mb-3">Race week weather forecasts</p>
+                    <ul class="text-xs text-gray-500 space-y-1">
+                        <li>• 7-day forecasts</li>
+                        <li>• Race day conditions</li>
+                        <li>• Hourly updates</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h4 class="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                        <span class="text-2xl">📺</span> Broadcast Integration
+                    </h4>
+                    <p class="text-sm text-gray-600 mb-3">Live race broadcasts</p>
+                    <ul class="text-xs text-gray-500 space-y-1">
+                        <li>• Outside TV (US/Canada)</li>
+                        <li>• DAZN (International)</li>
+                        <li>• YouTube live streams</li>
+                        <li>• proseries.ironman.com</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Brand Tab -->
+        <div id="brand" class="tab-content">
+            <div class="gradient-header text-white p-8 rounded-2xl mb-8">
+                <h2 class="text-3xl font-bold mb-2">Brand Guidelines</h2>
+                <p class="text-red-100">Official IRONMAN visual identity system (Corporate Brand Guidelines 08.2019)</p>
+                <div class="flex flex-wrap gap-3 mt-3">
+                    <a href="https://cdn2.sportngin.com/attachments/document/b424-2618385/IM19_CorporateBrandGuidelines_082219_sr.pdf" target="_blank" class="inline-flex items-center gap-1 text-xs bg-white/20 px-2 py-1 rounded hover:bg-white/30">📄 Official Brand Guidelines PDF →</a>
+                    <a href="https://brandfetch.com/ironman.com" target="_blank" class="inline-flex items-center gap-1 text-xs bg-white/20 px-2 py-1 rounded hover:bg-white/30">Brand Assets (Brandfetch) →</a>
+                </div>
+            </div>
+
+            <!-- Color Palette -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <span class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center text-red-600">🎨</span>
+                    Primary Color Palette
+                </h3>
+                <p class="text-gray-600 mb-6">When possible, Pantone colors should be used. If not possible, CMYK or RGB values are recommended.</p>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="w-full h-32 rounded-xl mb-4 shadow-lg" style="background: #C8102E;"></div>
+                        <p class="font-bold text-lg">IRONMAN Red</p>
+                        <div class="mt-2 space-y-1 text-sm">
+                            <p class="text-gray-600"><span class="font-medium">HEX:</span> #C8102E</p>
+                            <p class="text-gray-600"><span class="font-medium">RGB:</span> 200 / 16 / 46</p>
+                            <p class="text-gray-600"><span class="font-medium">CMYK:</span> 0 / 100 / 81 / 4</p>
+                            <p class="text-gray-600"><span class="font-medium">Pantone:</span> 186 C</p>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-full h-32 rounded-xl mb-4 bg-black shadow-lg"></div>
+                        <p class="font-bold text-lg">Black</p>
+                        <div class="mt-2 space-y-1 text-sm">
+                            <p class="text-gray-600"><span class="font-medium">HEX:</span> #000000</p>
+                            <p class="text-gray-600"><span class="font-medium">RGB:</span> 0 / 0 / 0</p>
+                            <p class="text-gray-600"><span class="font-medium">CMYK:</span> 75 / 68 / 67 / 90</p>
+                            <p class="text-gray-600"><span class="font-medium">Pantone:</span> Process Black C</p>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-full h-32 rounded-xl mb-4 bg-white border-2 border-gray-200 shadow-lg"></div>
+                        <p class="font-bold text-lg">White</p>
+                        <div class="mt-2 space-y-1 text-sm">
+                            <p class="text-gray-600"><span class="font-medium">HEX:</span> #FFFFFF</p>
+                            <p class="text-gray-600"><span class="font-medium">RGB:</span> 255 / 255 / 255</p>
+                            <p class="text-gray-600"><span class="font-medium">CMYK:</span> 0 / 0 / 0 / 0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logo: The M-Dot -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <span class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center text-red-600">Ⓜ️</span>
+                    The M-Dot Logo
+                </h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <div class="bg-gray-900 rounded-xl p-8 flex items-center justify-center mb-4">
+                            <div class="text-center">
+                                <div class="text-red-500 text-6xl mb-2">●</div>
+                                <div class="text-white font-black text-4xl tracking-wider">IRON<span class="text-red-500">M</span>AN</div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500 text-center">Logo on dark background</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-3">Logo Elements</h4>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li>• <strong>The M-Dot:</strong> Red stylized figure above the "M" - represents an athlete crossing the finish line</li>
+                            <li>• <strong>Typography:</strong> Heavy, bold sans-serif letterforms</li>
+                            <li>• <strong>Color Treatment:</strong> Black letters with red "M" and M-Dot</li>
+                            <li>• <strong>Symbolism:</strong> Globally recognized mark of endurance achievement</li>
+                        </ul>
+                        <div class="mt-4 p-4 bg-yellow-50 rounded-lg">
+                            <p class="text-sm text-yellow-800"><strong>Clear Space:</strong> Maintain minimum clear space around logo equal to the height of the M-Dot</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Typography -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <span class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">Aa</span>
+                    Typography
+                </h3>
+                <p class="text-gray-600 mb-6">Typography unifies the appearance of marketing communications. When used correctly and consistently, it strengthens brand recognition.</p>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-gray-50 rounded-xl p-6">
+                        <h4 class="font-bold text-gray-900 mb-4">Primary Display Font</h4>
+                        <div class="text-4xl font-black tracking-wide mb-2" style="font-family: system-ui;">SOLANO GOTHIC MVB</div>
+                        <p class="text-sm text-gray-600 mb-4">Selected for readability and versatility in headlines and display text</p>
+                        <div class="space-y-2 text-sm">
+                            <p><span class="font-bold">Bold:</span> Headlines, CTAs, emphasis</p>
+                            <p><span class="font-medium">Medium:</span> Subheadings, navigation</p>
+                            <p><span class="font-normal">Regular:</span> Body text alternatives</p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 rounded-xl p-6">
+                        <h4 class="font-bold text-gray-900 mb-4">Mobile App Typography</h4>
+                        <p class="text-sm text-gray-600 mb-4">For React Native implementation, use system fonts with similar characteristics:</p>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center p-2 bg-white rounded">
+                                <span class="text-sm font-medium">iOS</span>
+                                <span class="text-sm text-gray-600">SF Pro Display / SF Pro Text</span>
+                            </div>
+                            <div class="flex justify-between items-center p-2 bg-white rounded">
+                                <span class="text-sm font-medium">Android</span>
+                                <span class="text-sm text-gray-600">Roboto / Roboto Condensed</span>
+                            </div>
+                            <div class="flex justify-between items-center p-2 bg-white rounded">
+                                <span class="text-sm font-medium">Custom</span>
+                                <span class="text-sm text-gray-600">Load Solano Gothic via expo-font</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Naming Conventions -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <span class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center text-green-600">✓</span>
+                    Naming Conventions
+                </h3>
+                <p class="text-gray-600 mb-6">Consistent brand naming is critical for legal protection and brand integrity.</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-green-700 mb-3">✓ Correct Usage</h4>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li class="flex items-start gap-2"><span class="text-green-500">✓</span> IRONMAN (all caps, one word)</li>
+                            <li class="flex items-start gap-2"><span class="text-green-500">✓</span> IRONMAN 70.3</li>
+                            <li class="flex items-start gap-2"><span class="text-green-500">✓</span> IRONMAN Florida</li>
+                            <li class="flex items-start gap-2"><span class="text-green-500">✓</span> IRONMAN 70.3 World Championship</li>
+                            <li class="flex items-start gap-2"><span class="text-green-500">✓</span> IRONMAN World Championship</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-red-700 mb-3">✗ Incorrect Usage</h4>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li class="flex items-start gap-2"><span class="text-red-500">✗</span> IM, Iron Man, ironman, Ironman</li>
+                            <li class="flex items-start gap-2"><span class="text-red-500">✗</span> 70.3, IM 70.3, Half IRONMAN</li>
+                            <li class="flex items-start gap-2"><span class="text-red-500">✗</span> IM Florida, Florida IRONMAN</li>
+                            <li class="flex items-start gap-2"><span class="text-red-500">✗</span> Ironman Worlds, IM Worlds</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Voice & Tone -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <span class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600">💬</span>
+                    Voice & Tone
+                </h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="border-l-4 border-red-500 pl-4">
+                        <h4 class="font-bold text-gray-900 mb-2">Inspiring</h4>
+                        <p class="text-sm text-gray-600">"Anything Is Possible" - Motivate athletes to push beyond limits and believe in their potential</p>
+                    </div>
+                    <div class="border-l-4 border-red-500 pl-4">
+                        <h4 class="font-bold text-gray-900 mb-2">Empowering</h4>
+                        <p class="text-sm text-gray-600">"Become One" - Every finisher earns the right to call themselves an IRONMAN</p>
+                    </div>
+                    <div class="border-l-4 border-red-500 pl-4">
+                        <h4 class="font-bold text-gray-900 mb-2">Authentic</h4>
+                        <p class="text-sm text-gray-600">Speak to real athletes with real challenges - not just elite competitors</p>
+                    </div>
+                </div>
+                <div class="mt-6 bg-gray-900 rounded-xl p-6">
+                    <p class="text-white text-center text-2xl font-bold tracking-wide">"ANYTHING IS POSSIBLE"</p>
+                    <p class="text-gray-400 text-center text-sm mt-2">Primary brand tagline</p>
+                </div>
+            </div>
+
+            <!-- Sub-Brands -->
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <span class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center text-orange-600">🏷️</span>
+                    Sub-Brands & Event Series
+                </h3>
+                <p class="text-gray-600 mb-6">The mobile app should support multiple IRONMAN Group brands with consistent but differentiated styling.</p>
+                <div class="grid md:grid-cols-4 gap-4">
+                    <div class="bg-red-50 rounded-xl p-4 text-center">
+                        <div class="font-bold text-red-700 text-lg mb-1">IRONMAN</div>
+                        <p class="text-xs text-gray-600">Full distance triathlon</p>
+                    </div>
+                    <div class="bg-orange-50 rounded-xl p-4 text-center">
+                        <div class="font-bold text-orange-700 text-lg mb-1">IRONMAN 70.3</div>
+                        <p class="text-xs text-gray-600">Half distance triathlon</p>
+                    </div>
+                    <div class="bg-blue-50 rounded-xl p-4 text-center">
+                        <div class="font-bold text-blue-700 text-lg mb-1">5150</div>
+                        <p class="text-xs text-gray-600">Olympic distance</p>
+                    </div>
+                    <div class="bg-purple-50 rounded-xl p-4 text-center">
+                        <div class="font-bold text-purple-700 text-lg mb-1">IRONKIDS</div>
+                        <p class="text-xs text-gray-600">Youth events</p>
+                    </div>
+                </div>
+                <div class="mt-4 p-4 bg-gray-50 rounded-lg">
+                    <p class="text-sm text-gray-600"><strong>Future Expansion:</strong> Rock 'n' Roll Running Series, EPIC Series, and other IRONMAN Group properties may be added to the app platform.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline Tab -->
+        <div id="timeline" class="tab-content">
+            <div class="gradient-header text-white p-8 rounded-2xl mb-8">
+                <h2 class="text-3xl font-bold mb-2">Timeline</h2>
+                <p class="text-red-100">Project milestones</p>
+            </div>
+
+            <div class="grid md:grid-cols-4 gap-4">
+                <div class="bg-green-100 border-2 border-green-500 rounded-xl p-6 text-center">
+                    <h4 class="font-bold text-green-900">Discovery</h4>
+                    <p class="text-sm text-green-700">Jan 2026</p>
+                    <p class="text-xs text-green-600 mt-2">Current Phase</p>
+                </div>
+                <div class="bg-gray-100 rounded-xl p-6 text-center">
+                    <h4 class="font-bold text-gray-900">Design</h4>
+                    <p class="text-sm text-gray-600">Feb-Mar 2026</p>
+                </div>
+                <div class="bg-gray-100 rounded-xl p-6 text-center">
+                    <h4 class="font-bold text-gray-900">Development</h4>
+                    <p class="text-sm text-gray-600">Apr-Aug 2026</p>
+                </div>
+                <div class="bg-gray-100 rounded-xl p-6 text-center">
+                    <h4 class="font-bold text-gray-900">Launch</h4>
+                    <p class="text-sm text-gray-600">Sep 2026</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Tab -->
+        <div id="team" class="tab-content">
+            <div class="gradient-header text-white p-8 rounded-2xl mb-8">
+                <h2 class="text-3xl font-bold mb-2">Team & Contacts</h2>
+                <p class="text-red-100">Project stakeholders and key contacts</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- IRONMAN Team -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <div class="flex items-center gap-3 mb-6 pb-4 border-b">
+                        <div class="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center">
+                            <span class="text-white font-bold text-lg">IM</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-900">IRONMAN Team</h4>
+                            <p class="text-xs text-gray-500">Client Stakeholders</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="text-red-600 font-semibold">BW</span>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900">Brett Wallace</p>
+                                <p class="text-xs text-gray-500 mb-1">Executive Stakeholder</p>
+                                <a href="mailto:brett.wallace@ironman.com" class="text-xs text-red-600 hover:underline">brett.wallace@ironman.com</a>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="text-red-600 font-semibold">FP</span>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900">Frank Paleno</p>
+                                <p class="text-xs text-gray-500 mb-1">Technical Stakeholder</p>
+                                <a href="mailto:frank.paleno@ironman.com" class="text-xs text-red-600 hover:underline">frank.paleno@ironman.com</a>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="text-red-600 font-semibold">GS</span>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900">Geena Silvia</p>
+                                <p class="text-xs text-gray-500 mb-1">Director of Digital Platforms</p>
+                                <a href="mailto:geena.silvia@ironman.com" class="text-xs text-red-600 hover:underline">geena.silvia@ironman.com</a>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="text-red-600 font-semibold">RS</span>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900">Rahul Sheth</p>
+                                <p class="text-xs text-gray-500 mb-1">Product Manager</p>
+                                <a href="mailto:rahul.sheth@ironman.com" class="text-xs text-red-600 hover:underline">rahul.sheth@ironman.com</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STRV Team -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <div class="flex items-center gap-3 mb-6 pb-4 border-b">
+                        <div class="w-12 h-12 bg-black rounded-xl flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">STRV</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-900">STRV Team</h4>
+                            <p class="text-xs text-gray-500">Development Partner</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="text-purple-600 font-semibold">FO</span>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900">Fran Oliveira</p>
+                                <p class="text-xs text-gray-500 mb-1">Product Manager</p>
+                                <a href="mailto:fran.oliveira@strv.com" class="text-xs text-purple-600 hover:underline">fran.oliveira@strv.com</a>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="text-pink-600 font-semibold">B</span>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900">Barb</p>
+                                <p class="text-xs text-gray-500">Designer</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="text-blue-600 font-semibold">S</span>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900">Seb</p>
+                                <p class="text-xs text-gray-500">Tech Lead Engineer</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Communication Channels -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 mt-6">
+                <h4 class="font-bold text-gray-900 mb-4">📬 Communication Channels</h4>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
+                        <span class="text-2xl">💬</span>
+                        <div>
+                            <p class="font-medium text-gray-900">Slack</p>
+                            <p class="text-xs text-gray-500">#ironman-mobile-app</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+                        <span class="text-2xl">📋</span>
+                        <div>
+                            <p class="font-medium text-gray-900">Project Management</p>
+                            <p class="text-xs text-gray-500">Jira / Linear</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
+                        <span class="text-2xl">📁</span>
+                        <div>
+                            <p class="font-medium text-gray-900">Documentation</p>
+                            <p class="text-xs text-gray-500">Google Drive / Confluence</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Glossary Tab -->
+        <div id="glossary" class="tab-content">
+            <div class="gradient-header text-white p-8 rounded-2xl mb-8">
+                <h2 class="text-3xl font-bold mb-2">Glossary</h2>
+                <p class="text-red-100">Key terms and definitions</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-bold text-red-600 mb-4">Triathlon Terms</h4>
+                        <dl class="space-y-3 text-sm">
+                            <div><dt class="font-semibold">IRONMAN</dt><dd class="text-gray-600">2.4mi swim, 112mi bike, 26.2mi run</dd></div>
+                            <div><dt class="font-semibold">70.3</dt><dd class="text-gray-600">Half-distance: 1.2mi swim, 56mi bike, 13.1mi run</dd></div>
+                            <div><dt class="font-semibold">Kona</dt><dd class="text-gray-600">World Championship in Hawaii</dd></div>
+                            <div><dt class="font-semibold">AWA</dt><dd class="text-gray-600">All World Athlete status</dd></div>
+                        </dl>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-blue-600 mb-4">Technical Terms</h4>
+                        <dl class="space-y-3 text-sm">
+                            <div><dt class="font-semibold">RTRT.me</dt><dd class="text-gray-600">Real-Time Race Tracking system</dd></div>
+                            <div><dt class="font-semibold">Azure AD B2C</dt><dd class="text-gray-600">Microsoft identity management</dd></div>
+                            <div><dt class="font-semibold">Flex90</dt><dd class="text-gray-600">Registration modification system</dd></div>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sources Tab -->
+        <div id="sources" class="tab-content">
+            <div class="gradient-header text-white p-8 rounded-2xl mb-8">
+                <h2 class="text-3xl font-bold mb-2">Source Documents & References</h2>
+                <p class="text-red-100">All documentation and resources used in this Discovery Hub</p>
+            </div>
+
+            <!-- Primary Source Documents -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <span class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center text-red-600">📄</span>
+                    Primary Source Documents
+                </h3>
+                <div class="space-y-4">
+                    <a href="https://drive.google.com/file/d/1x0wfUAri8UXKSupwcRdQoqzZjxQt3nRh/view" target="_blank" class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                        <div class="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <span class="text-white text-xl">📋</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-900">IRONMAN Mobile App PRD</h4>
+                            <p class="text-sm text-gray-500">Product Requirements Document - 13 MVP Features, Goals, Success Metrics</p>
+                        </div>
+                        <span class="text-red-600">→</span>
+                    </a>
+                    <a href="https://drive.google.com/file/d/12FJWyqg4Y0y2i6j2lq5XUg0dH9PV5OvI/view" target="_blank" class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                        <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <span class="text-white text-xl">👥</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-900">Target Personas</h4>
+                            <p class="text-sm text-gray-500">5 Athlete Personas + 2 Fan Personas with motivations, voice & tone</p>
+                        </div>
+                        <span class="text-blue-600">→</span>
+                    </a>
+                    <a href="https://cdn2.sportngin.com/attachments/document/b424-2618385/IM19_CorporateBrandGuidelines_082219_sr.pdf" target="_blank" class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                        <div class="w-12 h-12 bg-black rounded-lg flex items-center justify-center flex-shrink-0">
+                            <span class="text-white text-xl">🎨</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-900">IRONMAN Corporate Brand Guidelines</h4>
+                            <p class="text-sm text-gray-500">Official brand identity system (August 2019) - Colors, Typography, Logo usage</p>
+                        </div>
+                        <span class="text-gray-600">→</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Technical Documentation -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <span class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">⚙️</span>
+                    Technical Documentation
+                </h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <a href="https://go.rtrt.me/docs/api/rest" target="_blank" class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100">
+                        <span class="text-2xl">📡</span>
+                        <div>
+                            <h4 class="font-semibold text-gray-900 text-sm">RTRT.me API Documentation</h4>
+                            <p class="text-xs text-gray-500">REST API for live race tracking</p>
+                        </div>
+                    </a>
+                    <a href="https://learn.microsoft.com/en-us/azure/active-directory-b2c/" target="_blank" class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100">
+                        <span class="text-2xl">🔐</span>
+                        <div>
+                            <h4 class="font-semibold text-gray-900 text-sm">Azure AD B2C Documentation</h4>
+                            <p class="text-xs text-gray-500">Authentication & identity management</p>
+                        </div>
+                    </a>
+                    <a href="https://documentation.onesignal.com/docs/en/react-native-expo-sdk-setup" target="_blank" class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100">
+                        <span class="text-2xl">🔔</span>
+                        <div>
+                            <h4 class="font-semibold text-gray-900 text-sm">OneSignal Expo SDK Setup</h4>
+                            <p class="text-xs text-gray-500">Push notifications for React Native</p>
+                        </div>
+                    </a>
+                    <a href="https://docs.expo.dev/" target="_blank" class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100">
+                        <span class="text-2xl">📱</span>
+                        <div>
+                            <h4 class="font-semibold text-gray-900 text-sm">Expo Documentation</h4>
+                            <p class="text-xs text-gray-500">React Native framework documentation</p>
+                        </div>
+                    </a>
+                    <a href="https://stripe.com/docs" target="_blank" class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100">
+                        <span class="text-2xl">💳</span>
+                        <div>
+                            <h4 class="font-semibold text-gray-900 text-sm">Stripe API Documentation</h4>
+                            <p class="text-xs text-gray-500">Payment processing integration</p>
+                        </div>
+                    </a>
+                    <a href="https://mixpanel.com/docs" target="_blank" class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100">
+                        <span class="text-2xl">📊</span>
+                        <div>
+                            <h4 class="font-semibold text-gray-900 text-sm">Mixpanel Documentation</h4>
+                            <p class="text-xs text-gray-500">Product analytics platform</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- External Resources -->
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <span class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center text-green-600">🌐</span>
+                    External Resources
+                </h3>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <a href="https://www.ironman.com" target="_blank" class="text-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100">
+                        <span class="text-2xl block mb-2">🏊</span>
+                        <h4 class="font-semibold text-gray-900 text-sm">IRONMAN.com</h4>
+                        <p class="text-xs text-gray-500">Official website</p>
+                    </a>
+                    <a href="https://rtrt.me" target="_blank" class="text-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100">
+                        <span class="text-2xl block mb-2">📍</span>
+                        <h4 class="font-semibold text-gray-900 text-sm">RTRT.me</h4>
+                        <p class="text-xs text-gray-500">Race tracking platform</p>
+                    </a>
+                    <a href="https://www.active.com" target="_blank" class="text-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100">
+                        <span class="text-2xl block mb-2">📝</span>
+                        <h4 class="font-semibold text-gray-900 text-sm">Active.com</h4>
+                        <p class="text-xs text-gray-500">Registration partner</p>
+                    </a>
+                    <a href="https://brandfetch.com/ironman.com" target="_blank" class="text-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100">
+                        <span class="text-2xl block mb-2">🎨</span>
+                        <h4 class="font-semibold text-gray-900 text-sm">Brand Assets</h4>
+                        <p class="text-xs text-gray-500">Logos & colors (Brandfetch)</p>
+                    </a>
+                    <a href="https://proseries.ironman.com" target="_blank" class="text-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100">
+                        <span class="text-2xl block mb-2">📺</span>
+                        <h4 class="font-semibold text-gray-900 text-sm">IRONMAN Pro Series</h4>
+                        <p class="text-xs text-gray-500">Live broadcasts</p>
+                    </a>
+                    <a href="https://github.com/OneSignal/onesignal-expo-plugin" target="_blank" class="text-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100">
+                        <span class="text-2xl block mb-2">💻</span>
+                        <h4 class="font-semibold text-gray-900 text-sm">OneSignal Expo Plugin</h4>
+                        <p class="text-xs text-gray-500">GitHub repository</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function showTab(tabId, element) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            if (element) element.classList.add('active');
+        }
+
+        function showPersona(personaId, btn) {
+            document.querySelectorAll('.persona-content').forEach(p => p.classList.add('hidden'));
+            document.querySelectorAll('.persona-btn').forEach(b => {
+                b.classList.remove('bg-red-600', 'text-white', 'active');
+                b.classList.add('bg-gray-200', 'text-gray-700');
+            });
+            document.getElementById('persona-' + personaId).classList.remove('hidden');
+            btn.classList.remove('bg-gray-200', 'text-gray-700');
+            btn.classList.add('bg-red-600', 'text-white', 'active');
+        }
+    </script>
+</body>
+</html>
